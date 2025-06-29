@@ -1,0 +1,29 @@
+{
+  "expo": {
+    "name": "aplikasi-pengingat-jadwal-kuliah-dan-tugas-kampus",
+    "slug": "snack-0dd565cc-3957-4383-9181-51dd4284a98a",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "description": "UTS Mobile Programing 2"
+  }
+}
