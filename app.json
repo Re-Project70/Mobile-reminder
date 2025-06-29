@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "aplikasi-pengingat-jadwal-kuliah-dan-tugas-kampus",
-    "slug": "snack-0dd565cc-3957-4383-9181-51dd4284a98a",
+    "slug": "project-mobile-programming",
     "version": "1.0.0",
     "sdkVersion": "52.0.0",
     "platforms": ["ios", "android"],
