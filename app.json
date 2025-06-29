@@ -3,6 +3,8 @@
     "name": "aplikasi-pengingat-jadwal-kuliah-dan-tugas-kampus",
     "slug": "snack-0dd565cc-3957-4383-9181-51dd4284a98a",
     "version": "1.0.0",
+    "sdkVersion": "52.0.0",
+    "platforms": ["ios", "android"],
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -16,7 +18,7 @@
       "supportsTablet": true
     },
     "android": {
-      "package": "com.reee11.pengingatkuliah",  // ✅ Tambahkan ini
+      "package": "com.reee11.pengingatkuliah",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -25,6 +27,12 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "description": "UTS Mobile Programing 2"
+    "description": "UTS Mobile Programing 2",
+    "extra": {
+      "eas": {
+        "projectId": "19c5abba-aff4-41c7-b6fb-641b495299fb"
+      }
+    }
   }
 }
+
