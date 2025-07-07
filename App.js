@@ -4,6 +4,7 @@ import {
   Platform, TouchableOpacity
 } from 'react-native';
 import * as Notifications from 'expo-notifications';
+import Constants from 'expo-constants';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default function App() {
@@ -18,15 +19,26 @@ export default function App() {
 
   useEffect(() => {
     const requestPermissions = async () => {
-      const { status } = await Notifications.requestPermissionsAsync();
-      if (status !== 'granted') {
-        Alert.alert('Izin Ditolak', 'Izinkan aplikasi untuk mengirim notifikasi.');
+      if (Constants.isDevice) {
+        const { status: existingStatus } = await Notifications.getPermissionsAsync();
+        let finalStatus = existingStatus;
+        if (existingStatus !== 'granted') {
+          const { status } = await Notifications.requestPermissionsAsync();
+          finalStatus = status;
+        }
+        if (finalStatus !== 'granted') {
+          Alert.alert('Izin Ditolak', 'Izinkan aplikasi untuk mengirim notifikasi.');
+          return;
+        }
+      } else {
+        Alert.alert('Perhatian', 'Harap jalankan aplikasi di perangkat fisik untuk notifikasi.');
       }
     };
 
     requestPermissions();
+
     const subscription = Notifications.addNotificationReceivedListener(notification => {
-      console.log(notification);
+      console.log('Notifikasi diterima:', notification);
     });
 
     return () => subscription.remove();
@@ -190,7 +202,6 @@ export default function App() {
   );
 }
 
-// Style
 const styles = StyleSheet.create({
   container: {
     flex: 1,
