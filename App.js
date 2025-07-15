@@ -170,7 +170,7 @@ export default function App() {
 
       <View style={{ flex: 1, marginTop: 20, position: 'relative' }}>
         <Image
-          source={require('./assets/logo.png')}
+          source={require('./assets/logo1.png')}
           style={styles.backgroundLogo}
           resizeMode="contain"
         />
