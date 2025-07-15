@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   StyleSheet, Text, TextInput, Button, View, FlatList, Alert,
-  Platform, TouchableOpacity
+  Platform, TouchableOpacity, Image
 } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
@@ -19,19 +19,22 @@ export default function App() {
 
   useEffect(() => {
     const requestPermissions = async () => {
-      if (Constants.isDevice) {
+      try {
         const { status: existingStatus } = await Notifications.getPermissionsAsync();
         let finalStatus = existingStatus;
+
         if (existingStatus !== 'granted') {
           const { status } = await Notifications.requestPermissionsAsync();
           finalStatus = status;
         }
+
         if (finalStatus !== 'granted') {
-          Alert.alert('Izin Ditolak', 'Izinkan aplikasi untuk mengirim notifikasi.');
+          Alert.alert('Izin Ditolak', 'Izinkan aplikasi untuk mengirim notifikasi di pengaturan perangkat.');
           return;
         }
-      } else {
-        Alert.alert('Perhatian', 'Harap jalankan aplikasi di perangkat fisik untuk notifikasi.');
+      } catch (error) {
+        console.error('Gagal meminta izin notifikasi:', error);
+        Alert.alert('Error', 'Terjadi kesalahan saat meminta izin notifikasi.');
       }
     };
 
@@ -185,19 +188,28 @@ export default function App() {
 
       <Button title="Tambah ke Daftar" onPress={addItem} />
 
-      <FlatList
-        style={{ marginTop: 20 }}
-        data={items}
-        keyExtractor={item => item.id}
-        renderItem={({ item }) => (
-          <View style={styles.listItem}>
-            <Text style={styles.bold}>🗓️ {item.jadwalKuliah}</Text>
-            <Text>{item.tugas}</Text>
-            <Text style={styles.dateText}>⏰ {new Date(item.date).toLocaleString()}</Text>
-            <Button title="Hapus" onPress={() => deleteItem(item.id)} />
-          </View>
-        )}
-      />
+      {/* Container FlatList dengan posisi relative */}
+      <View style={{ flex: 1, marginTop: 20, position: 'relative' }}>
+        {/* Logo kampus sebagai background */}
+        <Image
+          source={require('./assets/logo.png')}  // ganti sesuai path file logo kamu
+          style={styles.backgroundLogo}
+          resizeMode="contain"
+        />
+
+        <FlatList
+          data={items}
+          keyExtractor={item => item.id}
+          renderItem={({ item }) => (
+            <View style={styles.listItem}>
+              <Text style={styles.bold}>🗓️ {item.jadwalKuliah}</Text>
+              <Text>{item.tugas}</Text>
+              <Text style={styles.dateText}>⏰ {new Date(item.date).toLocaleString()}</Text>
+              <Button title="Hapus" onPress={() => deleteItem(item.id)} />
+            </View>
+          )}
+        />
+      </View>
     </View>
   );
 }
@@ -260,4 +272,17 @@ const styles = StyleSheet.create({
     color: '#555',
     marginVertical: 5,
   },
+backgroundLogo: {
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  width: '100%',
+  height: '100%',
+  opacity: 0.6,
+  zIndex: -1,
+  alignSelf: 'center',
+},
+
 });
