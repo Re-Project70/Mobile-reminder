@@ -4,7 +4,6 @@ import {
   Platform, TouchableOpacity, Image
 } from 'react-native';
 import * as Notifications from 'expo-notifications';
-import Constants from 'expo-constants';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default function App() {
@@ -114,25 +113,6 @@ export default function App() {
     setItems(prevItems => prevItems.filter(item => item.id !== itemId));
   };
 
-  const checkExpiredTasks = () => {
-    const now = new Date();
-    setItems(prevItems =>
-      prevItems.filter(item => {
-        const itemDate = new Date(item.date);
-        itemDate.setHours(itemDate.getHours() + 2);
-        return itemDate > now;
-      })
-    );
-  };
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      checkExpiredTasks();
-    }, 60000);
-
-    return () => clearInterval(interval);
-  }, []);
-
   return (
     <View style={styles.container}>
       <Text style={styles.title}>📅 Pengingat Jadwal & Tugas Kuliah</Text>
@@ -188,11 +168,9 @@ export default function App() {
 
       <Button title="Tambah ke Daftar" onPress={addItem} />
 
-      {/* Container FlatList dengan posisi relative */}
       <View style={{ flex: 1, marginTop: 20, position: 'relative' }}>
-        {/* Logo kampus sebagai background */}
         <Image
-          source={require('./assets/logo.png')}  // ganti sesuai path file logo kamu
+          source={require('./assets/logo.png')}
           style={styles.backgroundLogo}
           resizeMode="contain"
         />
@@ -200,14 +178,20 @@ export default function App() {
         <FlatList
           data={items}
           keyExtractor={item => item.id}
-          renderItem={({ item }) => (
-            <View style={styles.listItem}>
-              <Text style={styles.bold}>🗓️ {item.jadwalKuliah}</Text>
-              <Text>{item.tugas}</Text>
-              <Text style={styles.dateText}>⏰ {new Date(item.date).toLocaleString()}</Text>
-              <Button title="Hapus" onPress={() => deleteItem(item.id)} />
-            </View>
-          )}
+          renderItem={({ item }) => {
+            const now = new Date();
+            const itemDate = new Date(item.date);
+            const isExpired = now > itemDate;
+
+            return (
+              <View style={[styles.listItem, isExpired && styles.expiredItem]}>
+                <Text style={styles.bold}>🗓️ {item.jadwalKuliah}</Text>
+                <Text>{item.tugas}</Text>
+                <Text style={styles.dateText}>⏰ {itemDate.toLocaleString()}</Text>
+                <Button title="Hapus" onPress={() => deleteItem(item.id)} />
+              </View>
+            );
+          }}
         />
       </View>
     </View>
@@ -263,6 +247,10 @@ const styles = StyleSheet.create({
     borderColor: '#DDD',
     borderWidth: 1,
   },
+  expiredItem: {
+    backgroundColor: '#FFEBEE',
+    borderColor: '#E53935',
+  },
   bold: {
     fontWeight: 'bold',
     fontSize: 16,
@@ -272,17 +260,16 @@ const styles = StyleSheet.create({
     color: '#555',
     marginVertical: 5,
   },
-backgroundLogo: {
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
-  width: '100%',
-  height: '100%',
-  opacity: 0.6,
-  zIndex: -1,
-  alignSelf: 'center',
-},
-
+  backgroundLogo: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    width: '100%',
+    height: '100%',
+    opacity: 0.6,
+    zIndex: -1,
+    alignSelf: 'center',
+  },
 });
